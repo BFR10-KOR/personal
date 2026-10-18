@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온고지미 : 한일 융합 프로젝트 · 한복 퍼스널 컬러 진단</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fcf9f5;
+            color: #2c2c2c;
+        }
+        .font-batang {
+            font-family: 'Gowun Batang', serif;
+        }
+        .hanbok-shadow {
+            box-shadow: 0 10px 30px -5px rgba(184, 134, 11, 0.15);
+        }
+        .gender-card {
+            transition: all 0.25s ease;
+        }
+        .gender-card.selected {
+            border-color: #b45309;
+            background-color: #fef3c7;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- 헤더 -->
+    <header class="w-full bg-white/80 backdrop-blur-md border-b border-amber-100 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-amber-700 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-rose-600 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-indigo-700 inline-block"></span>
+                <h1 class="text-xl font-bold font-batang text-amber-950 ml-2">온고지미 (溫故知美) : 한일 융합 프로젝트</h1>
+            </div>
+            <button onclick="resetApp()" class="text-xs text-amber-800 hover:text-amber-950 underline flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                처음으로
+            </button>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- 1. 시작 화면 -->
+        <section id="start-screen" class="text-center py-10 px-6 bg-white rounded-3xl border border-amber-100 hanbok-shadow relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-40 h-40 bg-amber-100/50 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-rose-100/50 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-xl mx-auto">
+                <span class="inline-block px-4 py-1.5 bg-amber-50 text-amber-900 rounded-full text-xs font-semibold mb-4 border border-amber-200/80 shadow-sm">
+                    🇰🇷×🇯🇵 한일 문화 융합 프로젝트 온고지미 (溫故知美) 👘
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold font-batang text-gray-900 mb-3 leading-tight">
+                    <span class="text-amber-800">한복 퍼스널 컬러 & 배색 맞춤 진단</span>
+                </h2>
+                <p class="text-gray-600 text-sm md:text-base mb-8 leading-relaxed">
+                    한국 일본 융합 프로젝트 온고지미<br>
+                    나만의 피부톤에 어울리는 전통 빛깔을 진단하고 가상 한복 착용 시뮬레이션을 경험해 보세요.
+                </p>
+
+                <!-- 성별 선택 박스 -->
+                <div class="mb-8">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">체험하실 한복 성별을 선택해 주세요</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" onclick="selectGender('female')" id="gender-btn-female" class="gender-card p-5 border-2 border-stone-200 rounded-2xl bg-stone-50/50 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-amber-400">
+                            <span class="text-3xl">👧</span>
+                            <span class="font-bold text-gray-800 text-sm md:text-base">여성 한복 (치마·저고리)</span>
+                            <span class="text-[11px] text-gray-500">(단아한 우아함과 곡선의 미)</span>
+                        </button>
+                        <button type="button" onclick="selectGender('male')" id="gender-btn-male" class="gender-card p-5 border-2 border-stone-200 rounded-2xl bg-stone-50/50 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-amber-400">
+                            <span class="text-3xl">👦</span>
+                            <span class="font-bold text-gray-800 text-sm md:text-base">남성 한복 (저고리·바지·배자)</span>
+                            <span class="text-[11px] text-gray-500">(선비의 기개와 웅장한 품격)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="goToCameraStep()" class="w-full sm:w-auto px-8 py-4 bg-amber-800 hover:bg-amber-900 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                    융합 한복 빛깔 진단 시작하기
+                </button>
+            </div>
+        </section>
+
+        <!-- 1.5. 카메라/사진 업로드 화면 -->
+        <section id="camera-screen" class="hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-amber-100 hanbok-shadow text-center max-w-2xl mx-auto">
+                <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                    Step 1. Face Capture & Tone Analysis
+                </span>
+                <h3 class="text-2xl font-bold font-batang text-gray-900 mt-3 mb-2">얼굴 사진 등록 및 톤 분석</h3>
+                <p class="text-xs md:text-sm text-gray-500 mb-6">
+                    밝은 조명 아래의 얼굴 사진을 촬영하거나 업로드해 주세요.<br>한일 융합 배색 알고리즘을 통해 가상 한복 착용 시뮬레이션에 활용됩니다.
+                </p>
+
+                <div class="relative w-full max-w-sm mx-auto h-80 bg-stone-100 rounded-2xl overflow-hidden border-2 border-dashed border-amber-300 flex items-center justify-center mb-6">
+                    <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover hidden"></video>
+                    <canvas id="photo-canvas" class="hidden"></canvas>
+                    <img id="user-photo-preview" src="" alt="얼굴 이미지" class="w-full h-full object-cover hidden" />
+
+                    <div id="face-guide-overlay" class="absolute inset-0 pointer-events-none hidden flex flex-col items-center justify-center">
+                        <div class="w-48 h-64 border-2 border-amber-400 border-dashed rounded-[50%] opacity-80 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"></div>
+                        <span class="text-xs text-white mt-2 bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm">타원 안에 얼굴을 맞춰주세요</span>
+                    </div>
+
+                    <div id="camera-placeholder" class="text-center p-6">
+                        <div class="w-16 h-16 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <p class="text-xs text-gray-500 font-medium">카메라를 켜거나 사진을 등록해 주세요</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+                    <button id="start-cam-btn" onclick="startCamera()" class="w-full sm:w-auto px-5 py-2.5 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs md:text-sm font-medium transition flex items-center justify-center gap-2">
+                        카메라 켜기
+                    </button>
+                    <button id="capture-btn" onclick="capturePhoto()" class="w-full sm:w-auto px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs md:text-sm font-medium transition hidden flex items-center justify-center gap-2">
+                        사진 촬영
+                    </button>
+                    <label class="w-full sm:w-auto px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs md:text-sm font-medium transition cursor-pointer flex items-center justify-center gap-2 border border-stone-200">
+                        사진 업로드
+                        <input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="handleFileUpload(event)" />
+                    </label>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-gray-100 flex justify-between items-center">
+                    <button onclick="resetApp()" class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-gray-800">처음으로</button>
+                    <button id="proceed-quiz-btn" onclick="startQuiz()" class="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-xl text-xs md:text-sm font-medium transition shadow-md flex items-center gap-1.5">
+                        설문 조사 시작하기
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 설문 진행 화면 -->
+        <section id="quiz-screen" class="hidden">
+            <div class="mb-6">
+                <div class="flex justify-between text-xs text-amber-900 font-medium mb-2">
+                    <span id="progress-text">질문 1 / 8</span>
+                    <span id="progress-percent">12%</span>
+                </div>
+                <div class="w-full bg-amber-100 rounded-full h-2.5 overflow-hidden">
+                    <div id="progress-bar" class="bg-amber-700 h-2.5 rounded-full transition-all duration-300" style="width: 12.5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-amber-100 hanbok-shadow">
+                <div class="mb-6">
+                    <span id="question-category" class="text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-md">피부 톤</span>
+                    <h3 id="question-title" class="text-xl md:text-2xl font-bold font-batang text-gray-900 mt-2">질문 내용이 들어갑니다.</h3>
+                </div>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-100">
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-5 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">이전 질문</button>
+                    <span class="text-xs text-gray-400">선택지를 클릭하면 자동으로 다음으로 이동합니다</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 결과 화면 -->
+        <section id="result-screen" class="hidden space-y-8">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-amber-100 hanbok-shadow text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600"></div>
+                
+                <div id="result-user-photo-container" class="hidden mb-4 flex justify-center">
+                    <div class="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-amber-200 overflow-hidden shadow-md">
+                        <img id="result-user-photo" src="" alt="나의 진단 얼굴" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <span class="text-xs text-amber-800 font-semibold tracking-widest uppercase bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                    온고지미 융합 프로젝트 · Personal Color Result (<span id="result-gender-tag">여성</span>)
+                </span>
+
+                <h2 id="result-type" class="text-3xl md:text-4xl font-bold font-batang text-gray-900 mt-3 mb-2">봄 웜톤 (Spring Warm)</h2>
+                <p id="result-subtitle" class="text-amber-700 font-medium text-sm md:text-base mb-4">화사하고 따뜻한 생기가 도는 명랑한 분위기</p>
+                <p id="result-desc" class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-6">
+                    한국 전통 오방색의 화사함과 일본 미니멀리즘의 감성이 어우러지는 맑고 투명한 타입입니다.
+                </p>
+
+                <div class="bg-amber-50/50 rounded-2xl p-5 border border-amber-100">
+                    <h4 class="text-sm font-bold text-gray-800 mb-3 flex items-center justify-center gap-1.5">
+                        한일 융합 추천 한복 배색 팔레트 (溫故知美)
+                    </h4>
+                    <div id="palette-swatches" class="flex flex-wrap justify-center gap-3"></div>
+                </div>
+            </div>
+
+            <!-- 스타일 가이드 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-3xl p-6 border border-amber-100 hanbok-shadow">
+                    <h3 class="text-lg font-bold font-batang text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="w-2 h-4 bg-amber-700 rounded-full"></span>
+                        <span id="label-top-bottom-title">추천 의상 조합</span>
+                    </h3>
+                    <div class="space-y-4 text-sm text-gray-700">
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <span class="font-bold text-amber-900 block mb-1" id="label-jeogori-name">💡 저고리 (Jeogori)</span>
+                            <p id="jeogori-recommend">상대적으로 얼굴을 밝혀주는 맑은 톤</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <span class="font-bold text-amber-900 block mb-1" id="label-bottom-name">👗 치마 / 바지</span>
+                            <p id="chima-recommend">은은하고 생기 있는 컬러</p>
+                        </div>
+                        <div class="p-3 bg-amber-50/60 rounded-xl border border-amber-200/50">
+                            <span class="font-bold text-amber-900 block mb-1" id="label-outer-name">🎀 배자 / 옷고름 포인트</span>
+                            <p id="point-recommend">포인트 색상 추천</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-6 border border-amber-100 hanbok-shadow">
+                    <h3 class="text-lg font-bold font-batang text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="w-2 h-4 bg-rose-500 rounded-full"></span>
+                        융합 원단 질감 & 전통 장신구 단장
+                    </h3>
+                    <div class="space-y-4 text-sm text-gray-700">
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <span class="font-bold text-amber-900 block mb-1">🧵 융합 원단 및 소재 (Fabric)</span>
+                            <p id="fabric-recommend">실크, 명주 등 추천</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <span class="font-bold text-amber-900 block mb-1">💍 한일 전통 장신구 / 소품</span>
+                            <p id="accessory-recommend">장신구 추천</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <span class="font-bold text-amber-900 block mb-1">⚠️ 피해야 할 색상 (Avoid)</span>
+                            <p id="avoid-recommend">피해야 하는 색상</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 한복 가상 시뮬레이터 -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-amber-100 hanbok-shadow">
+                <div class="text-center mb-6">
+                    <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Interactive Fusion Simulator</span>
+                    <h3 class="text-2xl font-bold font-batang text-gray-900 mt-2">온고지미 융합 한복 가상 시뮬레이션</h3>
+                    <p class="text-xs md:text-sm text-gray-500 mt-1">등록된 얼굴 사진이 한복 도안과 자연스럽게 매칭됩니다.</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                    <!-- 한복 Canvas Wrapper -->
+                    <div class="relative w-72 h-[410px] bg-gradient-to-b from-amber-50/40 to-stone-100 rounded-2xl border border-amber-200/80 shadow-inner flex flex-col items-center justify-center p-2 overflow-hidden">
+                        
+                        <!-- ------------------- 여성용 한복 SVG ------------------- -->
+                        <svg id="svg-female-hanbok" viewBox="0 0 300 400" class="w-full h-full relative z-20 drop-shadow-md">
+                            <defs>
+                                <clipPath id="faceShapeClipFemale">
+                                    <path d="M 150 20 C 184 20, 198 50, 198 84 C 198 116, 180 148, 150 160 C 120 148, 102 116, 102 84 C 102 50, 116 20, 150 20 Z" />
+                                </clipPath>
+                                <linearGradient id="skirtShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#000" stop-opacity="0.15"/>
+                                    <stop offset="100%" stop-color="#000" stop-opacity="0.2"/>
+                                </linearGradient>
+
+                                <!-- 전통 문양 3종 (구름문, 국화문, 당초문) -->
+                                <pattern id="pattern-cloud" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                                    <path d="M 4 8 C 4 5, 8 5, 8 8 C 8 5, 12 5, 12 8 C 14 8, 14 11, 12 12 C 10 13, 6 13, 4 12 C 2 11, 2 8, 4 8 Z" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
+                                </pattern>
+                                <pattern id="pattern-chrysanthemum" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+                                    <circle cx="7" cy="7" r="1.5" fill="rgba(255,255,255,0.8)"/>
+                                    <path d="M 7 2 L 7 12 M 2 7 L 12 7 M 3.5 3.5 L 10.5 10.5 M 10.5 3.5 L 3.5 10.5" stroke="rgba(255,255,255,0.5)" stroke-width="0.7"/>
+                                </pattern>
+                                <pattern id="pattern-vine" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
+                                    <path d="M 0 9 Q 4.5 0, 9 9 T 18 9" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="0.9"/>
+                                    <circle cx="9" cy="9" r="1.2" fill="rgba(255,255,255,0.7)"/>
+                                </pattern>
+                            </defs>
+
+                            <!-- 1. 얼굴 레이어 -->
+                            <g id="sim-face-group-f">
+                                <g id="sim-face-placeholder-f">
+                                    <path d="M 150 20 C 184 20, 198 50, 198 84 C 198 116, 180 148, 150 160 C 120 148, 102 116, 102 84 C 102 50, 116 20, 150 20 Z" fill="#E7E5E4" stroke="#D6D3D1" stroke-dasharray="4 3" />
+                                    <text x="150" y="85" text-anchor="middle" fill="#A8A29E" font-size="10">온고지미 얼굴</text>
+                                    <text x="150" y="100" text-anchor="middle" fill="#A8A29E" font-size="9">미등록</text>
+                                </g>
+                                <image id="sim-face-svg-img-f" href="" x="95" y="15" width="110" height="150" preserveAspectRatio="xMidYMid slice" clip-path="url(#faceShapeClipFemale)" class="hidden" />
+                                <path id="sim-face-outline-f" d="M 150 20 C 184 20, 198 50, 198 84 C 198 116, 180 148, 150 160 C 120 148, 102 116, 102 84 C 102 50, 116 20, 150 20 Z" fill="none" stroke="rgba(217, 119, 6, 0.4)" stroke-width="1.5" class="hidden" />
+                            </g>
+
+                            <!-- 2. 치마 레이어 -->
+                            <g id="chima-group">
+                                <path id="sim-chima" d="M 105 175 Q 150 168 195 175 L 265 380 Q 150 398 35 380 Z" fill="#F87171" class="transition-colors duration-300" />
+                                <path d="M 105 175 Q 150 168 195 175 L 265 380 Q 150 398 35 380 Z" fill="url(#skirtShadow)" />
+                                <path d="M 125 176 C 115 240, 95 310, 85 386" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" />
+                                <path d="M 175 176 C 185 240, 205 310, 215 386" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" />
+                            </g>
+
+                            <!-- 3. 저고리 레이어 -->
+                            <g id="jeogori-group-f">
+                                <path id="sim-jeogori-f" d="M 102 142 Q 75 146 30 170 Q 22 210 40 208 Q 78 192 102 188 L 102 192 Q 150 198 198 192 L 198 188 Q 222 192 260 208 Q 278 210 270 170 Q 225 146 198 142 Q 150 152 102 142 Z" fill="#FEF3C7" class="transition-colors duration-300" />
+
+                                <!-- 여성 끝동 -->
+                                <path id="sim-kkeutdong-left" d="M 44 163 L 30 170 Q 22 210 40 208 L 48 196 Q 42 180 44 163 Z" fill="#78350F" />
+                                <path id="sim-kkeutdong-right" d="M 256 163 L 270 170 Q 278 210 260 208 L 252 196 Q 258 180 256 163 Z" fill="#78350F" />
+                                <path id="sim-kkeutdong-pattern-l" d="M 44 163 L 30 170 Q 22 210 40 208 L 48 196 Q 42 180 44 163 Z" fill="none" />
+                                <path id="sim-kkeutdong-pattern-r" d="M 256 163 L 270 170 Q 278 210 260 208 L 252 196 Q 258 180 256 163 Z" fill="none" />
+                            </g>
+
+                            <!-- 곁마기 -->
+                            <g id="sim-gyeotmagi-group" class="hidden">
+                                <path id="sim-gyeotmagi-left-short" d="M 102 165 L 94 172 L 102 178 Z" fill="#78350F" />
+                                <path id="sim-gyeotmagi-right-short" d="M 198 165 L 206 172 L 198 178 Z" fill="#78350F" />
+                                <path id="sim-gyeotmagi-left-mid" d="M 102 160 L 92 174 L 102 185 Z" fill="#78350F" class="hidden" />
+                                <path id="sim-gyeotmagi-right-mid" d="M 198 160 L 208 174 L 198 185 Z" fill="#78350F" class="hidden" />
+                                <path id="sim-gyeotmagi-left-long" d="M 102 154 L 88 178 L 102 191 Z" fill="#78350F" class="hidden" />
+                                <path id="sim-gyeotmagi-right-long" d="M 198 154 L 212 178 L 198 191 Z" fill="#78350F" class="hidden" />
+                            </g>
+
+                            <!-- 깃 & 동정 -->
+                            <g id="git-group-f">
+                                <path id="sim-git-left" d="M 100 138 Q 128 165 148 185 L 160 183 Q 138 158 120 132 Z" fill="#FFFFFF" />
+                                <path id="sim-git-right" d="M 200 138 Q 172 165 152 185 L 140 183 Q 162 158 180 132 Z" fill="#F8FAFC" />
+                                <path id="sim-git-pattern-l" d="M 100 138 Q 128 165 148 185 L 160 183 Q 138 158 120 132 Z" fill="none" />
+                                <path id="sim-git-pattern-r" d="M 200 138 Q 172 165 152 185 L 140 183 Q 162 158 180 132 Z" fill="none" />
+                            </g>
+
+                            <!-- 옷고름 -->
+                            <g id="otgoreum-group-f">
+                                <path id="sim-goreum-f" d="M 144 176 C 138 182, 134 230, 132 295 Q 140 297, 146 293 C 146 230, 150 185, 152 178 Z" fill="#DC2626" class="transition-colors duration-300" />
+                                <path id="sim-goreum-short-f" d="M 148 178 C 155 185, 172 230, 178 260 Q 186 261, 190 255 C 182 230, 162 185, 154 176 Z" fill="#B91C1C" class="transition-colors duration-300" />
+                                <path id="sim-goreum-pattern-long" d="M 144 176 C 138 182, 134 230, 132 295 Q 140 297, 146 293 C 146 230, 150 185, 152 178 Z" fill="none" />
+                                <path id="sim-goreum-pattern-short" d="M 148 178 C 155 185, 172 230, 178 260 Q 186 261, 190 255 C 182 230, 162 185, 154 176 Z" fill="none" />
+                                <ellipse cx="148" cy="177" rx="7" ry="5" fill="#991B1B" />
+                            </g>
+
+                            <!-- 노리개 -->
+                            <g id="sim-norigae-group">
+                                <g id="norigae-navi" class="hidden">
+                                    <line x1="168" y1="185" x2="168" y2="202" stroke="#DC2626" stroke-width="1.5"/>
+                                    <circle cx="168" cy="204" r="3.5" class="norigae-color-target" fill="#DC2626"/>
+                                    <path d="M 168 214 C 158 205, 152 218, 168 222 C 184 218, 178 205, 168 214 Z" fill="#FBBF24" stroke="#B45309" stroke-width="0.8"/>
+                                    <path d="M 168 222 C 160 226, 158 234, 168 231 C 178 234, 176 226, 168 222 Z" fill="#F59E0B" stroke="#B45309" stroke-width="0.8"/>
+                                    <circle cx="168" cy="218" r="2" class="norigae-color-target" fill="#DC2626"/>
+                                    <path d="M 165 231 L 160 282 L 171 282 L 166 231 Z" class="norigae-color-target" fill="#DC2626"/>
+                                    <path d="M 170 231 L 167 282 L 176 282 L 171 231 Z" class="norigae-color-target" fill="#B91C1C"/>
+                                </g>
+                                <g id="norigae-jade" class="hidden">
+                                    <line x1="168" y1="185" x2="168" y2="200" stroke="#059669" stroke-width="1.5"/>
+                                    <ellipse cx="168" cy="204" rx="6" ry="3.5" fill="#34D399" stroke="#059669" stroke-width="1"/>
+                                    <ellipse cx="168" cy="212" rx="6" ry="3.5" fill="#10B981" stroke="#047857" stroke-width="1"/>
+                                    <ellipse cx="168" cy="220" rx="6" ry="3.5" fill="#34D399" stroke="#059669" stroke-width="1"/>
+                                    <rect x="164" y="224" width="8" height="4" rx="1.5" fill="#065F46"/>
+                                    <path d="M 164 228 L 158 285 L 178 285 L 172 228 Z" class="norigae-color-target" fill="#059669"/>
+                                </g>
+                                <g id="norigae-samjak" class="hidden">
+                                    <line x1="168" y1="185" x2="168" y2="198" stroke="#B45309" stroke-width="1.5"/>
+                                    <path d="M 160 198 L 176 198 L 180 208 L 156 208 Z" fill="#FBBF24" stroke="#B45309" stroke-width="0.8"/>
+                                    <circle cx="162" cy="203" r="2" class="norigae-color-target" fill="#DC2626"/>
+                                    <circle cx="168" cy="203" r="2" fill="#2563EB"/>
+                                    <circle cx="174" cy="203" r="2" fill="#059669"/>
+                                    <path d="M 158 208 L 153 280 L 161 280 L 160 208 Z" class="norigae-color-target" fill="#DC2626"/>
+                                    <path d="M 168 208 L 165 280 L 171 280 L 168 208 Z" fill="#F59E0B"/>
+                                    <path d="M 176 208 L 175 280 L 183 280 L 178 208 Z" fill="#2563EB"/>
+                                </g>
+                                <g id="norigae-amber" class="hidden">
+                                    <line x1="168" y1="185" x2="168" y2="202" stroke="#78350F" stroke-width="1.5"/>
+                                    <circle cx="168" cy="214" r="7" fill="#D97706" stroke="#92400E" stroke-width="1"/>
+                                    <circle cx="165" cy="211" r="2.5" fill="#FBBF24"/>
+                                    <circle cx="171" cy="211" r="2.5" fill="#FBBF24"/>
+                                    <circle cx="165" cy="217" r="2.5" fill="#FBBF24"/>
+                                    <circle cx="171" cy="217" r="2.5" fill="#FBBF24"/>
+                                    <circle cx="168" cy="214" r="2" class="norigae-color-target" fill="#991B1B"/>
+                                    <path d="M 164 223 Q 168 227 172 223 L 170 230 L 166 230 Z" fill="#78350F"/>
+                                    <path d="M 163 230 L 157 285 L 179 285 L 173 230 Z" class="norigae-color-target" fill="#881337"/>
+                                </g>
+                            </g>
+
+                            <!-- 가발 레이어 -->
+                            <g id="sim-wig-group-f">
+                                <g id="wig-jjok" class="hidden">
+                                    <path d="M 101 82 C 100 38, 120 18, 150 18 C 180 18, 200 38, 199 82 C 188 56, 168 32, 150 32 C 132 32, 112 56, 101 82 Z" fill="#18181B"/>
+                                    <path d="M 198 82 C 206 112, 218 142, 212 175 C 206 190, 195 195, 185 182 C 192 162, 200 130, 192 95 Z" fill="#09090B"/>
+                                    <ellipse cx="206" cy="182" rx="9.5" ry="7.5" fill="#18181B" stroke="#09090B" stroke-width="1"/>
+                                    <line x1="180" y1="185" x2="228" y2="178" stroke="#FBBF24" stroke-width="2.8" stroke-linecap="round"/>
+                                    <circle cx="178" cy="185" r="3.5" fill="#DC2626"/>
+                                </g>
+                                <g id="wig-bbae" class="hidden">
+                                    <path d="M 101 82 C 100 38, 120 18, 150 18 C 180 18, 200 38, 199 82 C 188 56, 168 32, 150 32 C 132 32, 112 56, 101 82 Z" fill="#18181B"/>
+                                    <g fill="#18181B" stroke="#09090B" stroke-width="1">
+                                        <path d="M 198 82 C 212 100, 222 118, 212 135 C 200 132, 195 110, 198 82 Z" />
+                                        <path d="M 210 98 C 224 116, 226 135, 216 152 C 204 148, 202 128, 210 98 Z" fill="#27272A" />
+                                        <path d="M 214 130 C 228 148, 224 168, 210 182 C 198 178, 198 155, 214 130 Z" />
+                                        <path d="M 212 148 C 226 165, 220 185, 205 198 C 194 192, 196 170, 212 148 Z" fill="#27272A" />
+                                        <path d="M 208 178 C 220 195, 215 215, 200 228 C 190 220, 192 200, 208 178 Z" />
+                                        <path d="M 202 192 C 214 210, 208 228, 195 242 C 185 235, 188 215, 202 192 Z" fill="#27272A" />
+                                    </g>
+                                    <path d="M 206 112 Q 215 125, 208 138 M 208 148 Q 216 162, 206 175 M 202 185 Q 210 200, 200 215" fill="none" stroke="#52525B" stroke-width="1.2" stroke-linecap="round"/>
+                                    <path d="M 195 238 L 180 292 L 196 292 L 205 245 Z" fill="#DC2626" stroke="#991B1B" stroke-width="0.8"/>
+                                    <path d="M 200 240 L 208 288 L 218 285 L 208 244 Z" fill="#B91C1C" stroke="#7F1D1D" stroke-width="0.8"/>
+                                    <circle cx="198" cy="241" r="3" fill="#FBBF24"/>
+                                </g>
+                                <g id="wig-cheopji" class="hidden">
+                                    <path d="M 101 82 C 100 38, 120 18, 150 18 C 180 18, 200 38, 199 82 C 188 56, 168 32, 150 32 C 132 32, 112 56, 101 82 Z" fill="#18181B"/>
+                                    <line x1="150" y1="18" x2="150" y2="32" stroke="#3F3F46" stroke-width="1.2"/>
+                                    <path d="M 145 24 C 145 19, 155 19, 155 24 C 155 30, 145 30, 145 24 Z" fill="#9CA3AF" stroke="#4B5563" stroke-width="1"/>
+                                    <circle cx="150" cy="23" r="2.5" fill="#DC2626"/>
+                                </g>
+                                <g id="wig-eoyeoh" class="hidden">
+                                    <path d="M 92 52 C 88 -2, 212 -2, 208 52 C 218 90, 202 108, 188 88 C 176 32, 124 32, 112 88 C 98 108, 82 90, 92 52 Z" fill="#09090B"/>
+                                    <path d="M 96 52 C 92 10, 208 10, 204 52 C 212 80, 198 96, 186 78 C 175 34, 125 34, 114 78 C 102 96, 88 80, 96 52 Z" fill="#18181B" opacity="0.6"/>
+                                    <circle cx="150" cy="12" r="4" fill="#FBBF24"/>
+                                    <circle cx="124" cy="22" r="3" fill="#F472B6"/>
+                                    <circle cx="176" cy="22" r="3" fill="#F472B6"/>
+                                </g>
+                            </g>
+
+                            <!-- 머리 장신구 -->
+                            <g id="sim-hair-acc-group">
+                                <g id="acc-baessi" class="hidden"><circle cx="150" cy="18" r="9" fill="#DC2626"/><circle cx="150" cy="18" r="4" fill="#FBBF24"/></g>
+                                <g id="acc-duikoji" class="hidden"><circle id="duikoji-flower" cx="193" cy="34" r="5" fill="#F472B6"/></g>
+                                <g id="acc-cheopji" class="hidden"><circle id="cheopji-gem" cx="150" cy="28" r="4.5" fill="#DC2626"/></g>
+                                <g id="acc-jokduri" class="hidden"><path d="M 132 21 L 140 8 L 160 8 L 168 21 Z" fill="#18181B"/><circle cx="150" cy="11" r="3" fill="#DC2626"/></g>
+                            </g>
+                        </svg>
+
+                        <!-- ------------------- 남성용 한복 SVG ------------------- -->
+                        <svg id="svg-male-hanbok" viewBox="0 0 300 400" class="w-full h-full relative z-20 drop-shadow-md hidden">
+                            <defs>
+                                <clipPath id="faceShapeClipMale">
+                                    <path d="M 150 22 C 182 22, 195 50, 195 82 C 195 114, 178 144, 150 156 C 122 144, 105 114, 105 82 C 105 50, 118 22, 150 22 Z" />
+                                </clipPath>
+                            </defs>
+
+                            <!-- 1. 얼굴 레이어 -->
+                            <g id="sim-face-group-m">
+                                <g id="sim-face-placeholder-m">
+                                    <path d="M 150 22 C 182 22, 195 50, 195 82 C 195 114, 178 144, 150 156 C 122 144, 105 114, 105 82 C 105 50, 118 22, 150 22 Z" fill="#E7E5E4" stroke="#D6D3D1" stroke-dasharray="4 3" />
+                                    <text x="150" y="85" text-anchor="middle" fill="#A8A29E" font-size="10">온고지미 얼굴</text>
+                                    <text x="150" y="100" text-anchor="middle" fill="#A8A29E" font-size="9">미등록</text>
+                                </g>
+                                <image id="sim-face-svg-img-m" href="" x="95" y="15" width="110" height="150" preserveAspectRatio="xMidYMid slice" clip-path="url(#faceShapeClipMale)" class="hidden" />
+                                <path id="sim-face-outline-m" d="M 150 22 C 182 22, 195 50, 195 82 C 195 114, 178 144, 150 156 C 122 144, 105 114, 105 82 C 105 50, 118 22, 150 22 Z" fill="none" stroke="rgba(217, 119, 6, 0.4)" stroke-width="1.5" class="hidden" />
+                            </g>
+
+                            <!-- 2. 바지 레이어 -->
+                            <g id="baji-group">
+                                <path id="sim-baji-left" d="M 108 245 L 98 375 Q 125 382 142 375 L 146 250 Z" fill="#78350F" class="transition-colors duration-300" />
+                                <path id="sim-baji-right" d="M 154 250 L 158 375 Q 175 382 202 375 L 192 245 Z" fill="#78350F" class="transition-colors duration-300" />
+                                <path d="M 98 368 L 142 368 L 140 376 L 100 376 Z" fill="#18181B" />
+                                <path d="M 158 368 L 202 368 L 200 376 L 160 376 Z" fill="#18181B" />
+                            </g>
+
+                            <!-- 3. 남성 저고리 & 끝동 레이어 -->
+                            <g id="jeogori-group-m">
+                                <path id="sim-jeogori-m" d="M 104 140 Q 75 145 25 168 Q 18 220 48 215 Q 80 192 104 185 L 104 248 L 196 248 L 196 185 Q 220 192 252 215 Q 282 220 275 168 Q 225 145 196 140 Q 150 150 104 140 Z" fill="#FEF3C7" class="transition-colors duration-300" />
+                                
+                                <!-- 남성 한복 끝동 -->
+                                <path id="sim-male-kkeutdong-left" d="M 38 162 L 25 168 Q 18 220 48 215 L 56 198 Q 42 180 38 162 Z" fill="#78350F" />
+                                <path id="sim-male-kkeutdong-right" d="M 262 162 L 275 168 Q 282 220 252 215 L 244 198 Q 258 180 262 162 Z" fill="#78350F" />
+                                <path id="sim-male-kkeutdong-pattern-l" d="M 38 162 L 25 168 Q 18 220 48 215 L 56 198 Q 42 180 38 162 Z" fill="none" />
+                                <path id="sim-male-kkeutdong-pattern-r" d="M 262 162 L 275 168 Q 282 220 252 215 L 244 198 Q 258 180 262 162 Z" fill="none" />
+                            </g>
+
+                            <!-- 4. 배자 / 쾌자 레이어 -->
+                            <g id="baeja-group">
+                                <path id="sim-baeja" d="M 106 145 L 106 250 L 194 250 L 194 145 Q 150 152 106 145 Z" fill="#1D4ED8" class="transition-colors duration-300" />
+                                <path d="M 106 145 L 140 185 L 140 250 M 194 145 L 160 185 L 160 250" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                                <path id="sim-male-belt" d="M 106 215 L 194 215" stroke="#B91C1C" stroke-width="6" class="transition-colors duration-300" />
+                                <path id="sim-male-belt-knot" d="M 142 215 L 138 270 M 148 215 L 152 260" stroke="#B91C1C" stroke-width="3.5" stroke-linecap="round" class="transition-colors duration-300" />
+                            </g>
+
+                            <!-- 동정 및 깃 -->
+                            <g>
+                                <path d="M 104 138 L 122 133 Q 138 152 153 175 L 145 178 Q 128 156 104 138 Z" fill="#FFFFFF" />
+                                <path d="M 196 138 L 178 133 Q 162 152 147 175 L 155 178 Q 172 156 196 138 Z" fill="#FFFFFF" />
+                            </g>
+
+                            <!-- 5. 남성 관모 (갓 & 익선관) -->
+                            <g id="acc-gat-group" class="hidden">
+                                <!-- 선비 갓 -->
+                                <g id="hat-gat">
+                                    <ellipse cx="150" cy="22" rx="68" ry="10" fill="#18181B" opacity="0.95" />
+                                    <path d="M 126 22 L 132 2 L 168 2 L 174 22 Z" fill="#18181B" />
+                                    <path d="M 120 23 Q 150 65 180 23" fill="none" stroke="#FBBF24" stroke-width="2" stroke-dasharray="3 2" />
+                                </g>
+                                <!-- 익선관 (Ikseongwan) -->
+                                <g id="hat-ikseongwan" class="hidden">
+                                    <path d="M 115 32 C 115 8, 130 0, 150 0 C 170 0, 185 8, 185 32 Z" fill="#18181B" stroke="#27272A" stroke-width="1"/>
+                                    <path d="M 120 28 Q 150 18 180 28 L 182 32 Q 150 22 118 32 Z" fill="#27272A"/>
+                                    <path d="M 132 10 C 122 -8, 108 -12, 114 -22 C 124 -24, 136 -10, 138 6 Z" fill="#18181B" stroke="#3F3F46" stroke-width="0.8"/>
+                                    <path d="M 168 10 C 178 -8, 192 -12, 186 -22 C 176 -24, 164 -10, 162 6 Z" fill="#18181B" stroke="#3F3F46" stroke-width="0.8"/>
+                                    <path d="M 120 28 Q 150 20 180 28" fill="none" stroke="#D97706" stroke-width="1.2"/>
+                                    <circle cx="150" cy="14" r="2.5" fill="#FBBF24"/>
+                                </g>
+                            </g>
+                        </svg>
+
+                        <div class="absolute bottom-2 text-[10px] text-gray-500 bg-white/80 px-2 py-0.5 rounded-full backdrop-blur-sm border border-amber-100">
+                            ✨ 온고지미 융합 한복 시뮬레이터
+                        </div>
+                    </div>
+
+                    <!-- 컨트롤러 패널 -->
+                    <div class="w-full md:w-auto flex-1 space-y-4">
+                        
+                        <!-- 얼굴 미세 조절 -->
+                        <div id="face-adjust-panel" class="hidden bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200/70">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-amber-900 flex items-center gap-1">
+                                    얼굴 위치 / 크기 조절
+                                </span>
+                                <button onclick="resetFaceTransform()" class="text-[10px] text-amber-700 hover:underline">초기화</button>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3 text-[11px] text-gray-700">
+                                <div>
+                                    <label class="block text-gray-500 mb-0.5">확대/축소</label>
+                                    <input type="range" id="face-zoom" min="70" max="150" value="100" oninput="updateFaceTransform()" class="w-full accent-amber-700">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-500 mb-0.5">상하 이동</label>
+                                    <input type="range" id="face-pos-y" min="-30" max="30" value="0" oninput="updateFaceTransform()" class="w-full accent-amber-700">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-500 mb-0.5">좌우 이동</label>
+                                    <input type="range" id="face-pos-x" min="-30" max="30" value="0" oninput="updateFaceTransform()" class="w-full accent-amber-700">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 저고리 색상 -->
+                        <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                            <div class="flex justify-between items-center mb-2.5">
+                                <label class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                    저고리 색상 (Jeogori)
+                                </label>
+                                <label class="text-[11px] text-amber-800 hover:text-amber-900 cursor-pointer flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-gray-200">
+                                    🎨 직접 선택
+                                    <input type="color" id="custom-jeogori-color" class="w-4 h-4 rounded cursor-pointer border-0 p-0" onchange="setJeogoriColor(this.value)" />
+                                </label>
+                            </div>
+                            <div id="sim-jeogori-picker" class="flex flex-wrap gap-2"></div>
+                        </div>
+
+                        <!-- 치마/바지 색상 -->
+                        <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                            <div class="flex justify-between items-center mb-2.5">
+                                <label class="text-xs font-bold text-gray-800 flex items-center gap-1.5" id="label-bottom-picker-name">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                                    치마 색상 (Chima)
+                                </label>
+                                <label class="text-[11px] text-amber-800 hover:text-amber-900 cursor-pointer flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-gray-200">
+                                    🎨 직접 선택
+                                    <input type="color" id="custom-bottom-color" class="w-4 h-4 rounded cursor-pointer border-0 p-0" onchange="setBottomColor(this.value)" />
+                                </label>
+                            </div>
+                            <div id="sim-bottom-picker" class="flex flex-wrap gap-2"></div>
+                        </div>
+
+                        <!-- 배자/옷고름 색상 -->
+                        <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                            <div class="flex justify-between items-center mb-2.5">
+                                <label class="text-xs font-bold text-gray-800 flex items-center gap-1.5" id="label-outer-picker-name">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                                    옷고름 포인트 (Otgoreum)
+                                </label>
+                                <label class="text-[11px] text-amber-800 hover:text-amber-900 cursor-pointer flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-gray-200">
+                                    🎨 직접 선택
+                                    <input type="color" id="custom-outer-color" class="w-4 h-4 rounded cursor-pointer border-0 p-0" onchange="setOuterColor(this.value)" />
+                                </label>
+                            </div>
+                            <div id="sim-outer-picker" class="flex flex-wrap gap-2"></div>
+                        </div>
+
+                        <!-- 여성 전용 악세서리 패널 -->
+                        <div id="female-acc-panel" class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200/80 space-y-3">
+                            <div>
+                                <h4 class="text-xs font-bold text-amber-950 border-b border-amber-200/60 pb-1.5 mb-2">👩‍🦱 여성 전통 머리 모양 (가발 착용/해제)</h4>
+                                <div class="grid grid-cols-5 gap-1 text-center">
+                                    <button onclick="setFemaleWig('none')" id="wig-btn-none" class="px-1.5 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]">해제</button>
+                                    <button onclick="setFemaleWig('jjok')" id="wig-btn-jjok" class="px-1.5 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">쪽머리</button>
+                                    <button onclick="setFemaleWig('bbae')" id="wig-btn-bbae" class="px-1.5 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">땋은머리</button>
+                                    <button onclick="setFemaleWig('cheopji')" id="wig-btn-cheopji" class="px-1.5 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">첩지머리</button>
+                                    <button onclick="setFemaleWig('eoyeoh')" id="wig-btn-eoyeoh" class="px-1.5 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">어여머리</button>
+                                </div>
+                            </div>
+
+                            <!-- 곁마기 & 끝동 색상 관리 -->
+                            <div class="space-y-2 border-t border-amber-200/60 pt-2">
+                                <h4 class="text-xs font-bold text-amber-950 border-b border-amber-200/60 pb-1.5">🧵 저고리 곁마기 & 끝동 색상 조절</h4>
+                                
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between text-[11px]">
+                                        <span class="font-medium text-gray-800">곁마기 범위 (저고리 상의 내부)</span>
+                                        <div class="flex items-center gap-1.5">
+                                            <div id="sim-gyeotmagi-picker" class="flex gap-1"></div>
+                                            <label class="text-[10px] text-amber-800 cursor-pointer bg-white px-1 py-0.5 rounded border border-gray-200">
+                                                🎨 <input type="color" id="custom-gyeotmagi-color" class="w-3 h-3 cursor-pointer border-0 p-0 align-middle" onchange="setGyeotmagiColor(this.value)" />
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-4 gap-1 text-center">
+                                        <button onclick="setGyeotmagi('none')" id="gm-btn-none" class="px-1 py-1 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]">해제</button>
+                                        <button onclick="setGyeotmagi('short')" id="gm-btn-short" class="px-1 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px]">작게</button>
+                                        <button onclick="setGyeotmagi('mid')" id="gm-btn-mid" class="px-1 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px]">표준</button>
+                                        <button onclick="setGyeotmagi('long')" id="gm-btn-long" class="px-1 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px]">저고리 전체</button>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-1">
+                                    <div class="flex items-center justify-between text-[11px]">
+                                        <span class="font-medium text-gray-800">소매 끝동 색상 (퍼스널 컬러 맞춤)</span>
+                                        <div class="flex items-center gap-1.5">
+                                            <div id="sim-kkeutdong-picker" class="flex gap-1"></div>
+                                            <label class="text-[10px] text-amber-800 cursor-pointer bg-white px-1 py-0.5 rounded border border-gray-200">
+                                                🎨 <input type="color" id="custom-kkeutdong-color" class="w-3 h-3 cursor-pointer border-0 p-0 align-middle" onchange="setKkeutdongColor(this.value)" />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 전통 문양 3종 선택 -->
+                            <div class="border-t border-amber-200/60 pt-2">
+                                <h4 class="text-xs font-bold text-amber-950 border-b border-amber-200/60 pb-1.5 mb-1.5">🌸 조선시대 전통 문양 (끝동·깃·고름 적용)</h4>
+                                <div class="grid grid-cols-4 gap-1 text-center">
+                                    <button onclick="setTraditionalPattern('none')" id="pattern-btn-none" class="px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]">없음</button>
+                                    <button onclick="setTraditionalPattern('cloud')" id="pattern-btn-cloud" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">구름문</button>
+                                    <button onclick="setTraditionalPattern('chrysanthemum')" id="pattern-btn-chrysanthemum" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">국화문</button>
+                                    <button onclick="setTraditionalPattern('vine')" id="pattern-btn-vine" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">당초문</button>
+                                </div>
+                            </div>
+
+                            <!-- 노리개 설정 -->
+                            <div class="space-y-2 border-t border-amber-200/60 pt-2">
+                                <h4 class="text-xs font-bold text-amber-950 border-b border-amber-200/60 pb-1.5">🎎 한복 치마 노리개</h4>
+                                <div class="grid grid-cols-5 gap-1 text-center">
+                                    <button onclick="setNorigae('none')" id="norigae-btn-none" class="px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]">안함</button>
+                                    <button onclick="setNorigae('navi')" id="norigae-btn-navi" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">나비노리개</button>
+                                    <button onclick="setNorigae('jade')" id="norigae-btn-jade" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">옥가락지</button>
+                                    <button onclick="setNorigae('samjak')" id="norigae-btn-samjak" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">삼작노리개</button>
+                                    <button onclick="setNorigae('amber')" id="norigae-btn-amber" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">호박매화</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 남성 전용 악세서리 & 디테일 패널 -->
+                        <div id="male-acc-panel" class="hidden bg-amber-50/50 p-4 rounded-2xl border border-amber-200/80 space-y-3">
+                            <!-- 남성 관모 (갓 / 익선관 선택) -->
+                            <div>
+                                <h4 class="text-xs font-bold text-amber-950 border-b border-amber-200/60 pb-1.5 mb-2">🎩 남성 관모 선택 (갓 / 익선관)</h4>
+                                <div class="grid grid-cols-3 gap-2 text-center">
+                                    <button type="button" onclick="setMaleHat('none')" id="hat-btn-none" class="px-2 py-1.5 rounded-xl border border-amber-600 bg-amber-100 text-amber-950 font-bold text-xs">미착용</button>
+                                    <button type="button" onclick="setMaleHat('gat')" id="hat-btn-gat" class="px-2 py-1.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-xs hover:border-amber-400">선비 갓</button>
+                                    <button type="button" onclick="setMaleHat('ikseongwan')" id="hat-btn-ikseongwan" class="px-2 py-1.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-xs hover:border-amber-400">👑 익선관</button>
+                                </div>
+                            </div>
+
+                            <!-- 남성 저고리 소매 끝동 색상 선택 -->
+                            <div class="space-y-1 border-t border-amber-200/60 pt-2">
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="font-medium text-amber-950 font-bold">🧵 저고리 끝동 색상 (퍼스널 컬러 맞춤)</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <div id="sim-male-kkeutdong-picker" class="flex gap-1"></div>
+                                        <label class="text-[10px] text-amber-800 cursor-pointer bg-white px-1 py-0.5 rounded border border-gray-200">
+                                            🎨 <input type="color" id="custom-male-kkeutdong-color" class="w-3 h-3 cursor-pointer border-0 p-0 align-middle" onchange="setKkeutdongColor(this.value)" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 남성 저고리 끝동 전통 무늬 3종 선택 -->
+                            <div class="border-t border-amber-200/60 pt-2">
+                                <h4 class="text-xs font-bold text-amber-950 border-b border-amber-200/60 pb-1.5 mb-1.5">🌸 남성 끝동 전통 무늬 3종 선택</h4>
+                                <div class="grid grid-cols-4 gap-1 text-center">
+                                    <button onclick="setTraditionalPattern('none')" id="m-pattern-btn-none" class="px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]">무늬 없음</button>
+                                    <button onclick="setTraditionalPattern('cloud')" id="m-pattern-btn-cloud" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">☁️ 구름문</button>
+                                    <button onclick="setTraditionalPattern('chrysanthemum')" id="m-pattern-btn-chrysanthemum" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">🌼 국화문</button>
+                                    <button onclick="setTraditionalPattern('vine')" id="m-pattern-btn-vine" class="px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400">🌿 당초문</button>
+                                </div>
+                            </div>
+
+                            <!-- 세작띠 허리띠 -->
+                            <div class="pt-2 border-t border-amber-200/60 flex items-center justify-between">
+                                <span class="text-[11px] text-amber-900 font-medium">허리띠(세작띠) 색상</span>
+                                <div class="flex items-center gap-2">
+                                    <div id="sim-belt-picker" class="flex gap-1.5"></div>
+                                    <label class="text-[10px] text-amber-800 cursor-pointer bg-white px-1.5 py-0.5 rounded border border-gray-200">
+                                        🎨 <input type="color" id="custom-belt-color" class="w-3 h-3 cursor-pointer border-0 p-0 align-middle" onchange="setBeltColor(this.value)" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                <button onclick="resetApp()" class="px-6 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-xl text-sm font-medium transition shadow-md">
+                    다시 진단하기
+                </button>
+                <button onclick="copyResultShare()" class="px-6 py-3 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-sm font-medium transition shadow-md flex items-center justify-center gap-2">
+                    온고지미 결과 요약 복사하기
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full bg-white border-t border-amber-100 py-6 text-center text-xs text-gray-400 mt-12">
+        <p>© 온고지미 (溫故知美) : 한일 문화 융합 프로젝트 · Hanbok Personal Color Diagnosis.</p>
+    </footer>
+
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-900/90 text-white text-xs px-4 py-2.5 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        안내 메시지
+    </div>
+
+    <!-- 스크립트 로직 -->
+    <script>
+        let userGender = 'female'; 
+        let currentQuestionIndex = 0;
+        let selectedAnswers = [];
+        let finalResultSeason = 'spring';
+        let userCapturedPhoto = null;
+        let mediaStream = null;
+
+        const questions = [
+            {
+                category: "피부 톤 및 와비사비 베이스",
+                title: "햇빛에 노출되었을 때 내 피부 반응과 평소 피부 톤은?",
+                options: [
+                    { text: "쉽게 타고 밝은 노란빛이나 피치빛이 도는 맑은 피부톤", scores: { spring: 3, autumn: 1, summer: 0, winter: 0 } },
+                    { text: "붉어지거나 살짝 붉은 기가 도는 밝고 타기 쉬운 쿨톤 피부", scores: { summer: 3, winter: 1, spring: 0, autumn: 0 } },
+                    { text: "피부톤이 차분하며 노르스름하거나 매트한 차콜 톤", scores: { autumn: 3, spring: 1, summer: 0, winter: 0 } },
+                    { text: "피부톤이 아주 밝거나 차가우며 대비가 강한 선명한 톤", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            },
+            {
+                category: "눈동자 & 헤어 컬러",
+                title: "나의 자연 머리색과 눈동자의 색감은 어떤가요?",
+                options: [
+                    { text: "밝은 갈색, 눈동자가 맑고 또렷함", scores: { spring: 3, autumn: 1, summer: 0, winter: 0 } },
+                    { text: "부드러운 다크 브라운, 흑갈색", scores: { summer: 3, spring: 0, autumn: 1, winter: 0 } },
+                    { text: "깊고 오묘한 차콜 브라운, 카키빛 감도는 갈색", scores: { autumn: 3, winter: 0, spring: 1, summer: 0 } },
+                    { text: "칠흑 같은 또렷한 검은색, 선명함", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            },
+            {
+                category: "악세서리/금속 톤",
+                title: "얼굴을 더 돋보이게 하는 metallic 재질은?",
+                options: [
+                    { text: "반짝이는 옐로우 골드, 샴페인 골드", scores: { spring: 3, autumn: 1, summer: 0, winter: 0 } },
+                    { text: "은은한 실버, 백금, 진주", scores: { summer: 3, winter: 1, spring: 0, autumn: 0 } },
+                    { text: "앤틱한 로즈골드, 무광 골드, 호박, 비취", scores: { autumn: 3, spring: 1, summer: 0, winter: 0 } },
+                    { text: "선명한 플래티넘 실버, 칠흑색 어두운 금속", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            },
+            {
+                category: "한일 융합 의상 컬러",
+                title: "평소 가장 얼굴이 살아나는 컬러군은?",
+                options: [
+                    { text: "살구, 코랄, 화사한 개나리 노랑", scores: { spring: 3, summer: 0, autumn: 1, winter: 0 } },
+                    { text: "파스텔 핑크, 라벤더, 소프트 스카이블루", scores: { summer: 3, winter: 1, spring: 0, autumn: 0 } },
+                    { text: "테라코타, 카키, 올리브, 딥 베이지", scores: { autumn: 3, spring: 1, summer: 0, winter: 0 } },
+                    { text: "딥 버건디, 로열 블루, 극명한 흑백", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            },
+            {
+                category: "무채색 반응",
+                title: "어떤 무채색 상의를 입었을 때 더 화사해 보이나요?",
+                options: [
+                    { text: "완전 흰색보다 부드러운 아이보리/크림색", scores: { spring: 2, autumn: 2, summer: 0, winter: 0 } },
+                    { text: "차분한 맑은 순백색이나 회백색", scores: { summer: 2, winter: 2, spring: 0, autumn: 0 } },
+                    { text: "따뜻한 베이지나 밤색, 카키계열 무채색", scores: { autumn: 3, spring: 1, summer: 0, winter: 0 } },
+                    { text: "선명한 퓨어 화이트 또는 완전 블랙", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            },
+            {
+                category: "온고지미 분위기 선호도",
+                title: "한복을 입었을 때 연출하고 싶은 나의 분위기는?",
+                options: [
+                    { text: "화사하고 맑으며 친근한 분위기", scores: { spring: 3, summer: 1, autumn: 0, winter: 0 } },
+                    { text: "단아하고 청초하며 우아한 분위기", scores: { summer: 3, spring: 1, autumn: 0, winter: 0 } },
+                    { text: "고급스럽고 깊이감 있으며 세련된 품격", scores: { autumn: 3, winter: 1, spring: 0, summer: 0 } },
+                    { text: "선명하고 또렷하며 존재감 있는 카리스마", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            },
+            {
+                category: "색상 대비감",
+                title: "상/하의 색상 대비는 어떤 조화가 어울리나요?",
+                options: [
+                    { text: "밝고 화사한 톤인톤 조합", scores: { spring: 2, summer: 2, autumn: 0, winter: 0 } },
+                    { text: "은은하고 부드러운 파스텔 그라데이션 연출", scores: { summer: 3, autumn: 1, spring: 0, winter: 0 } },
+                    { text: "깊고 묵직한 톤온톤 조합 (예: 딥카키+브라운)", scores: { autumn: 3, spring: 0, summer: 0, winter: 1 } },
+                    { text: "상/하의 색상 대비가 뚜렷함 (예: 흰상의+남색하의)", scores: { winter: 3, spring: 0, summer: 1, autumn: 0 } }
+                ]
+            },
+            {
+                category: "워스트 컬러",
+                title: "입었을 때 얼굴이 칙칙해 보이는 색은?",
+                options: [
+                    { text: "어두운 차콜, 블랙이나 탁한 쥐색", scores: { spring: 3, summer: 1, autumn: 0, winter: 0 } },
+                    { text: "답답한 노란빛 카키, 탁한 주황색", scores: { summer: 3, winter: 2, spring: 0, autumn: 0 } },
+                    { text: "형광빛 핑크나 차가운 원색 블루", scores: { autumn: 3, spring: 1, summer: 0, winter: 0 } },
+                    { text: "희미한 파스텔 피치나 누드 베이지", scores: { winter: 3, summer: 1, spring: 0, autumn: 0 } }
+                ]
+            }
+        ];
+
+        const seasonProfiles = {
+            spring: {
+                name: "온고지미 봄 웜톤 (Spring Warm)",
+                subtitle: "화사하고 생기 가득한 따뜻한 햇살 타입",
+                desc: "한국 전통 오방색의 명랑함과 일본 미니멀 파스텔 감성이 어우러져 피부에 화사한 생기를 선사합니다.",
+                colors: [
+                    { name: "연살구", hex: "#FDBA74" }, { name: "개나리", hex: "#FDE047" },
+                    { name: "산호색", hex: "#F87171" }, { name: "아이보리", hex: "#FEF3C7" }, { name: "옥색", hex: "#6EE7B7" }
+                ],
+                female: {
+                    jeogori: "아이보리, 따뜻한 연노랑, 연피치",
+                    bottom: "산호색(코랄), 화사한 옥색 치마",
+                    outer: "다홍색 코랄 옷고름 포인트",
+                    acc: "화사한 실크 배씨댕기 및 꽃 뒤꽂이",
+                    sim: { jeogori: "#FEF3C7", bottom: "#F87171", outer: "#E11D48" }
+                },
+                male: {
+                    jeogori: "밝은 크림/아이보리 저고리",
+                    bottom: "차분한 워시드 브라운/연베이지 바지",
+                    outer: "화사한 코랄/밝은 옥색 배자",
+                    acc: "밝은 톤 세작띠 및 선비 갓",
+                    sim: { jeogori: "#FEF3C7", bottom: "#B45309", outer: "#F87171" }
+                },
+                fabric: "맑고 가벼운 명주 실크 및 고품질 노방 원단",
+                avoid: "칙칙한 다크 차콜, 냉정한 쿨 블루"
+            },
+            summer: {
+                name: "온고지미 여름 쿨톤 (Summer Cool)",
+                subtitle: "청초하고 단아하며 우아한 타입",
+                desc: "일본 기모노의 은은한 아사기(수채화) 톤과 한국 전통 청초한 회청색이 만나 우아한 분위기를 자아냅니다.",
+                colors: [
+                    { name: "파스텔 핑크", hex: "#F472B6" }, { name: "라벤더", hex: "#C084FC" },
+                    { name: "은옥색", hex: "#A5F3FC" }, { name: "순백색", hex: "#FFFFFF" }, { name: "연회색", hex: "#94A3B8" }
+                ],
+                female: {
+                    jeogori: "순백색, 라벤더 저고리",
+                    bottom: "회옥색, 연보라 치마",
+                    outer: "자색(보라) 옷고름",
+                    acc: "진주 첩지 및 파스텔 뒤꽂이",
+                    sim: { jeogori: "#FFFFFF", bottom: "#C084FC", outer: "#86198F" }
+                },
+                male: {
+                    jeogori: "순백색/은회색 저고리",
+                    bottom: "차분한 쥐색(그레이) 바지",
+                    outer: "스카이 블루/라벤더 배자",
+                    acc: "은사 매듭 띠",
+                    sim: { jeogori: "#FFFFFF", bottom: "#475569", outer: "#38BDF8" }
+                },
+                fabric: "은은하고 살랑거리는 모시 및 옥사 원단",
+                avoid: "탁한 주황색, 강한 골드 브라운"
+            },
+            autumn: {
+                name: "온고지미 가을 웜톤 (Autumn Warm)",
+                subtitle: "깊이 있고 고급스러우며 단아한 타입",
+                desc: "와비사비(Wabi-sabi)의 흙빛 질감과 한국의 전통 고유 자연 색감이 깊은 품격을 완성합니다.",
+                colors: [
+                    { name: "겨자색", hex: "#EAB308" }, { name: "대추색", hex: "#B91C1C" },
+                    { name: "올리브", hex: "#65A30D" }, { name: "베이지", hex: "#D97706" }, { name: "딥브라운", hex: "#78350F" }
+                ],
+                female: {
+                    jeogori: "차분한 베이지, 겨자색 저고리",
+                    bottom: "깊은 대추빛, 쑥색 치마",
+                    outer: "앤틱 브라운 옷고름",
+                    acc: "전통 첩지 및 앤틱 장식",
+                    sim: { jeogori: "#FDE68A", bottom: "#B91C1C", outer: "#78350F" }
+                },
+                male: {
+                    jeogori: "은은한 샌드 베이지 저고리",
+                    bottom: "딥 브라운/밤색 바지",
+                    outer: "올리브 카키/대추색 배자",
+                    acc: "가죽/옥 매듭 노리개",
+                    sim: { jeogori: "#FEF3C7", bottom: "#78350F", outer: "#65A30D" }
+                },
+                fabric: "묵직한 양단(공단), 도톰한 전통 명주",
+                avoid: "형광 핑크, 차가운 원색 블루"
+            },
+            winter: {
+                name: "온고지미 겨울 쿨톤 (Winter Cool)",
+                subtitle: "선명하고 도회적이며 또렷한 타입",
+                desc: "한국 전통 오방색의 진한 원색과 일본 현대 그래픽 미학이 대조를 이루어 카리스마 있는 매력을 줍니다.",
+                colors: [
+                    { name: "로열 블루", hex: "#1D4ED8" }, { name: "딥 버건디", hex: "#881337" },
+                    { name: "칠흑", hex: "#18181B" }, { name: "아이시 블루", hex: "#E0F2FE" }, { name: "자련색", hex: "#C026D3" }
+                ],
+                female: {
+                    jeogori: "선명한 백색, 아이시 블루 저고리",
+                    bottom: "로열 블루(남치마), 딥 버건디 치마",
+                    outer: "칠흑색 옷고름",
+                    acc: "족두리 및 은사 댕기",
+                    sim: { jeogori: "#E0F2FE", bottom: "#1D4ED8", outer: "#881337" }
+                },
+                male: {
+                    jeogori: "퓨어 화이트 저고리",
+                    bottom: "칠흑색(블랙) 바지",
+                    outer: "로열 블루/딥 버건디 배자",
+                    acc: "선비 갓 및 검은색 세작띠",
+                    sim: { jeogori: "#FFFFFF", bottom: "#18181B", outer: "#1D4ED8" }
+                },
+                fabric: "광택이 또렷한 고급 실크 및 금박/은박 수공예",
+                avoid: "탁한 누드 베이지, 미지근한 주황"
+            }
+        };
+
+        const extendedColorPalette = [
+            { name: "순백", hex: "#FFFFFF" }, { name: "아이보리", hex: "#FEF3C7" },
+            { name: "개나리", hex: "#FDE047" }, { name: "연살구", hex: "#FDBA74" },
+            { name: "산호색", hex: "#F87171" }, { name: "진다홍", hex: "#DC2626" },
+            { name: "대추색", hex: "#881337" }, { name: "라벤더", hex: "#E9D5FF" },
+            { name: "자련색", hex: "#C026D3" }, { name: "은옥색", hex: "#A5F3FC" },
+            { name: "남색", hex: "#1D4ED8" }, { name: "쑥색", hex: "#65A30D" },
+            { name: "밤색", hex: "#78350F" }, { name: "먹색", hex: "#18181B" }
+        ];
+
+        function selectGender(gender) {
+            userGender = gender;
+            document.getElementById('gender-btn-female').classList.toggle('selected', gender === 'female');
+            document.getElementById('gender-btn-male').classList.toggle('selected', gender === 'male');
+        }
+        selectGender('female');
+
+        function goToCameraStep() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('camera-screen').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function startCamera() {
+            try {
+                const video = document.getElementById('webcam-video');
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                video.srcObject = mediaStream;
+                video.classList.remove('hidden');
+                document.getElementById('camera-placeholder').classList.add('hidden');
+                document.getElementById('face-guide-overlay').classList.remove('hidden');
+                document.getElementById('start-cam-btn').classList.add('hidden');
+                document.getElementById('capture-btn').classList.remove('hidden');
+            } catch (err) {
+                showToast("카메라를 켤 수 없습니다. 사진 업로드를 이용해 주세요.");
+            }
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('webcam-video');
+            const canvas = document.getElementById('photo-canvas');
+            const previewImg = document.getElementById('user-photo-preview');
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 640;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            userCapturedPhoto = canvas.toDataURL('image/png');
+            previewImg.src = userCapturedPhoto;
+            previewImg.classList.remove('hidden');
+
+            stopCamera();
+            video.classList.add('hidden');
+            document.getElementById('face-guide-overlay').classList.add('hidden');
+            document.getElementById('capture-btn').classList.add('hidden');
+            document.getElementById('start-cam-btn').classList.remove('hidden');
+            document.getElementById('start-cam-btn').innerText = "다시 촬영";
+        }
+
+        function stopCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            stopCamera();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                userCapturedPhoto = e.target.result;
+                const previewImg = document.getElementById('user-photo-preview');
+                previewImg.src = userCapturedPhoto;
+                previewImg.classList.remove('hidden');
+                document.getElementById('webcam-video').classList.add('hidden');
+                document.getElementById('camera-placeholder').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function startQuiz() {
+            stopCamera();
+            document.getElementById('camera-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            currentQuestionIndex = 0;
+            selectedAnswers = Array(questions.length).fill(null);
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').innerText = `질문 ${currentQuestionIndex + 1} / ${questions.length}`;
+            document.getElementById('progress-percent').innerText = `${Math.round(progress)}%`;
+
+            document.getElementById('question-category').innerText = q.category;
+            document.getElementById('question-title').innerText = q.title;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = selectedAnswers[currentQuestionIndex] === idx;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-2xl border transition flex items-center justify-between ${
+                    isSelected ? 'bg-amber-100 border-amber-600 font-medium' : 'bg-stone-50 border-gray-200'
+                }`;
+                btn.onclick = () => {
+                    selectedAnswers[currentQuestionIndex] = idx;
+                    renderQuestion();
+                    setTimeout(() => {
+                        if (currentQuestionIndex < questions.length - 1) {
+                            currentQuestionIndex++;
+                            renderQuestion();
+                        } else {
+                            calculateResult();
+                        }
+                    }, 200);
+                };
+                btn.innerHTML = `<span>${idx + 1}. ${opt.text}</span>`;
+                container.appendChild(btn);
+            });
+
+            document.getElementById('prev-btn').disabled = (currentQuestionIndex === 0);
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function calculateResult() {
+            let scores = { spring: 0, summer: 0, autumn: 0, winter: 0 };
+            selectedAnswers.forEach((ansIdx, qIdx) => {
+                if (ansIdx !== null) {
+                    const s = questions[qIdx].options[ansIdx].scores;
+                    for (let key in s) scores[key] += s[key];
+                }
+            });
+
+            let topSeason = 'spring';
+            let maxScore = -1;
+            for (let key in scores) {
+                if (scores[key] > maxScore) {
+                    maxScore = scores[key];
+                    topSeason = key;
+                }
+            }
+            finalResultSeason = topSeason;
+            showResult(finalResultSeason);
+        }
+
+        function showResult(seasonKey) {
+            const profile = seasonProfiles[seasonKey];
+            const genderData = userGender === 'female' ? profile.female : profile.male;
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            document.getElementById('result-gender-tag').innerText = userGender === 'female' ? '여성 한복' : '남성 한복';
+            document.getElementById('result-type').innerText = profile.name;
+            document.getElementById('result-subtitle').innerText = profile.subtitle;
+            document.getElementById('result-desc').innerText = profile.desc;
+
+            if (userGender === 'female') {
+                document.getElementById('label-top-bottom-title').innerText = "여성 한복 추천 조합";
+                document.getElementById('label-jeogori-name').innerText = "💡 저고리 (Jeogori)";
+                document.getElementById('label-bottom-name').innerText = "👗 치마 (Chima)";
+                document.getElementById('label-outer-name').innerText = "🎀 옷고름 포인트";
+                
+                document.getElementById('label-bottom-picker-name').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> 치마 색상 (Chima)';
+                document.getElementById('label-outer-picker-name').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> 옷고름 포인트 (Otgoreum)';
+
+                document.getElementById('svg-female-hanbok').classList.remove('hidden');
+                document.getElementById('svg-male-hanbok').classList.add('hidden');
+                document.getElementById('female-acc-panel').classList.remove('hidden');
+                document.getElementById('male-acc-panel').classList.add('hidden');
+            } else {
+                document.getElementById('label-top-bottom-title').innerText = "남성 한복 추천 조합";
+                document.getElementById('label-jeogori-name').innerText = "💡 저고리 (Jeogori)";
+                document.getElementById('label-bottom-name').innerText = "👖 바지 (Baji)";
+                document.getElementById('label-outer-name').innerText = "🧥 배자 / 마고자 (Baeja)";
+
+                document.getElementById('label-bottom-picker-name').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-amber-800"></span> 바지 색상 (Baji)';
+                document.getElementById('label-outer-picker-name').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> 배자 색상 (Baeja)';
+
+                document.getElementById('svg-female-hanbok').classList.add('hidden');
+                document.getElementById('svg-male-hanbok').classList.remove('hidden');
+                document.getElementById('female-acc-panel').classList.add('hidden');
+                document.getElementById('male-acc-panel').classList.remove('hidden');
+            }
+
+            document.getElementById('jeogori-recommend').innerText = genderData.jeogori;
+            document.getElementById('chima-recommend').innerText = genderData.bottom;
+            document.getElementById('point-recommend').innerText = genderData.outer;
+            document.getElementById('fabric-recommend').innerText = profile.fabric;
+            document.getElementById('accessory-recommend').innerText = genderData.acc;
+            document.getElementById('avoid-recommend').innerText = profile.avoid;
+
+            const swatches = document.getElementById('palette-swatches');
+            swatches.innerHTML = '';
+            profile.colors.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col items-center';
+                div.innerHTML = `
+                    <div class="w-12 h-12 rounded-2xl border" style="background-color: ${c.hex}"></div>
+                    <span class="text-[11px] mt-1">${c.name}</span>
+                `;
+                swatches.appendChild(div);
+            });
+
+            setupFacePhoto();
+            initSimulator(profile, genderData);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setupFacePhoto() {
+            const photoContainer = document.getElementById('result-user-photo-container');
+            const userPhotoImg = document.getElementById('result-user-photo');
+            const adjustPanel = document.getElementById('face-adjust-panel');
+
+            if (userCapturedPhoto) {
+                userPhotoImg.src = userCapturedPhoto;
+                photoContainer.classList.remove('hidden');
+                adjustPanel.classList.remove('hidden');
+
+                if (userGender === 'female') {
+                    document.getElementById('sim-face-svg-img-f').setAttribute('href', userCapturedPhoto);
+                    document.getElementById('sim-face-svg-img-f').classList.remove('hidden');
+                    document.getElementById('sim-face-outline-f').classList.remove('hidden');
+                    document.getElementById('sim-face-placeholder-f').classList.add('hidden');
+                } else {
+                    document.getElementById('sim-face-svg-img-m').setAttribute('href', userCapturedPhoto);
+                    document.getElementById('sim-face-svg-img-m').classList.remove('hidden');
+                    document.getElementById('sim-face-outline-m').classList.remove('hidden');
+                    document.getElementById('sim-face-placeholder-m').classList.add('hidden');
+                }
+                resetFaceTransform();
+            } else {
+                photoContainer.classList.add('hidden');
+                adjustPanel.classList.add('hidden');
+            }
+        }
+
+        function initSimulator(profile, genderData) {
+            const defaults = genderData.sim;
+
+            setJeogoriColor(defaults.jeogori);
+            setBottomColor(defaults.bottom);
+            setOuterColor(defaults.outer);
+
+            const colors = [...profile.colors, ...extendedColorPalette];
+
+            createPicker('sim-jeogori-picker', colors, (hex) => setJeogoriColor(hex), defaults.jeogori);
+            createPicker('sim-bottom-picker', colors, (hex) => setBottomColor(hex), defaults.bottom);
+            createPicker('sim-outer-picker', colors, (hex) => setOuterColor(hex), defaults.outer);
+
+            if (userGender === 'female') {
+                createPicker('sim-acc-picker', colors.slice(0, 5), (hex) => setAccColor(hex), "#DC2626");
+                createPicker('sim-norigae-picker', colors.slice(0, 5), (hex) => setNorigaeColor(hex), "#DC2626");
+                createPicker('sim-gyeotmagi-picker', colors.slice(0, 5), (hex) => setGyeotmagiColor(hex), "#78350F");
+                createPicker('sim-kkeutdong-picker', colors.slice(0, 5), (hex) => setKkeutdongColor(hex), "#78350F");
+
+                setAccColor("#DC2626");
+                setGyeotmagiColor("#78350F");
+                setKkeutdongColor("#78350F");
+                setFemaleWig('none'); 
+                setNorigae('none');
+                setGyeotmagi('none');
+                setTraditionalPattern('none');
+            } else {
+                createPicker('sim-belt-picker', colors.slice(0, 5), (hex) => setBeltColor(hex), "#B91C1C");
+                createPicker('sim-male-kkeutdong-picker', colors.slice(0, 5), (hex) => setKkeutdongColor(hex), "#78350F");
+                setBeltColor("#B91C1C");
+                setKkeutdongColor("#78350F");
+                setMaleHat('none');
+                setTraditionalPattern('none');
+            }
+        }
+
+        function createPicker(containerId, colorList, callback, defaultHex) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            colorList.forEach(c => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `w-7 h-7 rounded-full border border-black/20 flex items-center justify-center flex-shrink-0 shadow-sm transition hover:scale-110`;
+                btn.style.backgroundColor = c.hex;
+                btn.onclick = () => {
+                    Array.from(container.children).forEach(b => b.innerHTML = '');
+                    btn.innerHTML = '<span class="w-2 h-2 rounded-full bg-white shadow"></span>';
+                    callback(c.hex);
+                };
+                if (defaultHex && c.hex.toLowerCase() === defaultHex.toLowerCase()) {
+                    btn.innerHTML = '<span class="w-2 h-2 rounded-full bg-white shadow"></span>';
+                }
+                container.appendChild(btn);
+            });
+        }
+
+        function setFemaleWig(type) {
+            const wigTypes = ['jjok', 'bbae', 'cheopji', 'eoyeoh'];
+            
+            wigTypes.forEach(t => {
+                const element = document.getElementById(`wig-${t}`);
+                const btn = document.getElementById(`wig-btn-${t}`);
+                
+                if (t === type) {
+                    if (element) element.classList.remove('hidden');
+                    if (btn) {
+                        btn.className = "px-1.5 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]";
+                    }
+                } else {
+                    if (element) element.classList.add('hidden');
+                    if (btn) {
+                        btn.className = "px-1.5 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400";
+                    }
+                }
+            });
+
+            const btnNone = document.getElementById('wig-btn-none');
+            if (btnNone) {
+                btnNone.className = (type === 'none') ? "px-1.5 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]" : "px-1.5 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400";
+            }
+        }
+
+        /* 곁마기 지정 */
+        function setGyeotmagi(lengthType) {
+            const group = document.getElementById('sim-gyeotmagi-group');
+            const lengths = ['short', 'mid', 'long'];
+
+            if (lengthType === 'none') {
+                group.classList.add('hidden');
+            } else {
+                group.classList.remove('hidden');
+                lengths.forEach(l => {
+                    const left = document.getElementById(`sim-gyeotmagi-left-${l}`);
+                    const right = document.getElementById(`sim-gyeotmagi-right-${l}`);
+                    if (l === lengthType) {
+                        if (left) left.classList.remove('hidden');
+                        if (right) right.classList.remove('hidden');
+                    } else {
+                        if (left) left.classList.add('hidden');
+                        if (right) right.classList.add('hidden');
+                    }
+                });
+            }
+
+            ['none', 'short', 'mid', 'long'].forEach(t => {
+                const btn = document.getElementById(`gm-btn-${t}`);
+                if (btn) {
+                    btn.className = (t === lengthType) ? "px-1 py-1 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]" : "px-1 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px]";
+                }
+            });
+        }
+
+        function setGyeotmagiColor(hex) {
+            ['short', 'mid', 'long'].forEach(l => {
+                const left = document.getElementById(`sim-gyeotmagi-left-${l}`);
+                const right = document.getElementById(`sim-gyeotmagi-right-${l}`);
+                if (left) left.setAttribute('fill', hex);
+                if (right) right.setAttribute('fill', hex);
+            });
+        }
+
+        /* 여성 & 남성 소매 끝동 색상 변경 */
+        function setKkeutdongColor(hex) {
+            const fLeft = document.getElementById('sim-kkeutdong-left');
+            const fRight = document.getElementById('sim-kkeutdong-right');
+            const mLeft = document.getElementById('sim-male-kkeutdong-left');
+            const mRight = document.getElementById('sim-male-kkeutdong-right');
+
+            if (fLeft) fLeft.setAttribute('fill', hex);
+            if (fRight) fRight.setAttribute('fill', hex);
+            if (mLeft) mLeft.setAttribute('fill', hex);
+            if (mRight) mRight.setAttribute('fill', hex);
+        }
+
+        /* 조선 시대 전통 무늬 적용 (여성 & 남성 공용) */
+        function setTraditionalPattern(patternType) {
+            const fillValue = patternType === 'none' ? 'none' : `url(#pattern-${patternType})`;
+
+            const targets = [
+                'sim-git-pattern-l', 'sim-git-pattern-r',
+                'sim-kkeutdong-pattern-l', 'sim-kkeutdong-pattern-r',
+                'sim-goreum-pattern-long', 'sim-goreum-pattern-short',
+                'sim-male-kkeutdong-pattern-l', 'sim-male-kkeutdong-pattern-r'
+            ];
+
+            targets.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.setAttribute('fill', fillValue);
+            });
+
+            // 여성 패널 버튼
+            ['none', 'cloud', 'chrysanthemum', 'vine'].forEach(p => {
+                const btn = document.getElementById(`pattern-btn-${p}`);
+                if (btn) {
+                    btn.className = (p === patternType) ? "px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]" : "px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400";
+                }
+            });
+
+            // 남성 패널 버튼
+            ['none', 'cloud', 'chrysanthemum', 'vine'].forEach(p => {
+                const btn = document.getElementById(`m-pattern-btn-${p}`);
+                if (btn) {
+                    btn.className = (p === patternType) ? "px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]" : "px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400";
+                }
+            });
+        }
+
+        function setNorigae(type) {
+            const norigaeTypes = ['navi', 'jade', 'samjak', 'amber'];
+            
+            norigaeTypes.forEach(t => {
+                const element = document.getElementById(`norigae-${t}`);
+                const btn = document.getElementById(`norigae-btn-${t}`);
+                
+                if (t === type) {
+                    if (element) element.classList.remove('hidden');
+                    if (btn) btn.className = "px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]";
+                } else {
+                    if (element) element.classList.add('hidden');
+                    if (btn) btn.className = "px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400";
+                }
+            });
+
+            const btnNone = document.getElementById('norigae-btn-none');
+            if (btnNone) {
+                btnNone.className = (type === 'none') ? "px-1 py-1.5 rounded-lg border border-amber-600 bg-amber-100 text-amber-950 font-bold text-[11px]" : "px-1 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 text-[11px] hover:border-amber-400";
+            }
+        }
+
+        function setNorigaeColor(hex) {
+            const targets = document.querySelectorAll('.norigae-color-target');
+            targets.forEach(el => el.setAttribute('fill', hex));
+        }
+
+        function setJeogoriColor(hex) {
+            const el = userGender === 'female' ? document.getElementById('sim-jeogori-f') : document.getElementById('sim-jeogori-m');
+            if (el) el.setAttribute('fill', hex);
+        }
+
+        function setBottomColor(hex) {
+            if (userGender === 'female') {
+                const el = document.getElementById('sim-chima');
+                if (el) el.setAttribute('fill', hex);
+            } else {
+                const elL = document.getElementById('sim-baji-left');
+                const elR = document.getElementById('sim-baji-right');
+                if (elL) elL.setAttribute('fill', hex);
+                if (elR) elR.setAttribute('fill', hex);
+            }
+        }
+
+        function setOuterColor(hex) {
+            if (userGender === 'female') {
+                const el = document.getElementById('sim-goreum-f');
+                const elShort = document.getElementById('sim-goreum-short-f');
+                if (el) el.setAttribute('fill', hex);
+                if (elShort) elShort.setAttribute('fill', hex);
+            } else {
+                const el = document.getElementById('sim-baeja');
+                if (el) el.setAttribute('fill', hex);
+            }
+        }
+
+        function setAccColor(hex) {
+            const d = document.getElementById('duikoji-flower');
+            const c = document.getElementById('cheopji-gem');
+            if (d) d.setAttribute('fill', hex);
+            if (c) c.setAttribute('fill', hex);
+        }
+
+        function setBeltColor(hex) {
+            const b = document.getElementById('sim-male-belt');
+            const k = document.getElementById('sim-male-belt-knot');
+            if (b) b.setAttribute('stroke', hex);
+            if (k) k.setAttribute('stroke', hex);
+        }
+
+        function setHairAcc(type) {
+            ['baessi', 'duikoji', 'cheopji', 'jokduri'].forEach(t => {
+                const el = document.getElementById(`acc-${t}`);
+                if (el) {
+                    if (t === type) el.classList.remove('hidden');
+                    else el.classList.add('hidden');
+                }
+            });
+        }
+
+        /* 남성 관모 설정 (갓 / 익선관 / 미착용) */
+        function setMaleHat(type) {
+            const gatGroup = document.getElementById('acc-gat-group');
+            const hatGat = document.getElementById('hat-gat');
+            const hatIkseongwan = document.getElementById('hat-ikseongwan');
+
+            if (type === 'none') {
+                gatGroup.classList.add('hidden');
+            } else if (type === 'gat') {
+                gatGroup.classList.remove('hidden');
+                hatGat.classList.remove('hidden');
+                hatIkseongwan.classList.add('hidden');
+            } else if (type === 'ikseongwan') {
+                gatGroup.classList.remove('hidden');
+                hatGat.classList.add('hidden');
+                hatIkseongwan.classList.remove('hidden');
+            }
+
+            ['none', 'gat', 'ikseongwan'].forEach(h => {
+                const btn = document.getElementById(`hat-btn-${h}`);
+                if (btn) {
+                    btn.className = (h === type) ? "px-2 py-1.5 rounded-xl border border-amber-600 bg-amber-100 text-amber-950 font-bold text-xs" : "px-2 py-1.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-xs hover:border-amber-400";
+                }
+            });
+        }
+
+        function updateFaceTransform() {
+            const zoom = parseFloat(document.getElementById('face-zoom').value) / 100;
+            const posY = parseFloat(document.getElementById('face-pos-y').value);
+            const posX = parseFloat(document.getElementById('face-pos-x').value);
+
+            const prefix = userGender === 'female' ? 'f' : 'm';
+            const imgEl = document.getElementById(`sim-face-svg-img-${prefix}`);
+
+            if (imgEl) {
+                const baseWidth = 110;
+                const baseHeight = 150;
+                const newWidth = baseWidth * zoom;
+                const newHeight = baseHeight * zoom;
+                const newX = 95 + posX - ((newWidth - baseWidth) / 2);
+                const newY = 15 + posY - ((newHeight - baseHeight) / 2);
+
+                imgEl.setAttribute('x', newX);
+                imgEl.setAttribute('y', newY);
+                imgEl.setAttribute('width', newWidth);
+                imgEl.setAttribute('height', newHeight);
+            }
+        }
+
+        function resetFaceTransform() {
+            document.getElementById('face-zoom').value = 100;
+            document.getElementById('face-pos-y').value = 0;
+            document.getElementById('face-pos-x').value = 0;
+            updateFaceTransform();
+        }
+
+        function resetApp() {
+            stopCamera();
+            userCapturedPhoto = null;
+            document.getElementById('user-photo-preview').src = "";
+            document.getElementById('user-photo-preview').classList.add('hidden');
+            document.getElementById('start-cam-btn').classList.remove('hidden');
+            document.getElementById('start-cam-btn').innerText = "카메라 켜기";
+            document.getElementById('capture-btn').classList.add('hidden');
+            document.getElementById('camera-placeholder').classList.remove('hidden');
+
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('camera-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function copyResultShare() {
+            const profile = seasonProfiles[finalResultSeason];
+            const text = `[온고지미 溫故知美 한일 융합 퍼스널 컬러 진단 결과]\n\n성별: ${userGender === 'female' ? '여성 한복' : '남성 한복'}\n타입: ${profile.name}\n특징: ${profile.subtitle}\n\n나만의 맞춤 배색을 가상 시뮬레이션으로 확인해 보세요!`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("온고지미 진단 결과가 클립보드에 복사되었습니다!");
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
+        }
+    </script>
+</body>
+</html>
