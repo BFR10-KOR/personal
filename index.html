@@ -658,4 +658,64 @@
                     desc: "한국 궁중 단청의 강렬한 대비와 일본 모던 미니멀리즘이 돋보이는 시크한 타입입니다.",
                     palette: ["#FFFFFF", "#000000", "#DC2626", "#1E3A8A", "#4C1D95"],
                     jeogori: "선명하고 깨끗한 퓨어 화이트 톤",
-                    chima: "묵직한 네이비,
+                    chima: "묵직한 네이비, 챠콜 또는 선명한 진홍색",
+                    point: "시크한 블랙 혹은 강렬한 레드 포인트",
+                    fabric: "선명한 발색의 공단, 실크 및 밀도 높은 직물",
+                    accessory: "삼작 노리개 및 은제 칠보 장신구",
+                    avoid: "탁하고 누런 황토빛 혹은 흐린 파스텔 톤"
+                }
+            };
+
+            const data = toneData[tone];
+            document.getElementById('result-type').innerText = data.title;
+            document.getElementById('result-subtitle').innerText = data.subtitle;
+            document.getElementById('result-desc').innerText = data.desc;
+            document.getElementById('jeogori-recommend').innerText = data.jeogori;
+            document.getElementById('chima-recommend').innerText = data.chima;
+            document.getElementById('point-recommend').innerText = data.point;
+            document.getElementById('fabric-recommend').innerText = data.fabric;
+            document.getElementById('accessory-recommend').innerText = data.accessory;
+            document.getElementById('avoid-recommend').innerText = data.avoid;
+
+            // 팔레트 스와치 생성
+            const paletteContainer = document.getElementById('palette-swatches');
+            paletteContainer.innerHTML = '';
+            data.palette.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'w-12 h-12 rounded-full shadow-md border-2 border-white';
+                swatch.style.backgroundColor = color;
+                paletteContainer.appendChild(swatch);
+            });
+
+            // 시뮬레이터 컬러 기본값 설정
+            document.getElementById('picker-top').value = data.palette[0];
+            document.getElementById('picker-bottom').value = data.palette[1];
+            document.getElementById('picker-point').value = data.palette[2];
+            changeHanbokColor('top', data.palette[0]);
+            changeHanbokColor('bottom', data.palette[1]);
+            changeHanbokColor('point', data.palette[2]);
+        }
+
+        // 실시간 한복 색상 변경
+        function changeHanbokColor(part, color) {
+            if (selectedGender === 'female') {
+                if (part === 'top') {
+                    document.getElementById('sim-jeogori-f').setAttribute('fill', color);
+                } else if (part === 'bottom') {
+                    document.getElementById('sim-chima').setAttribute('fill', color);
+                } else if (part === 'point') {
+                    document.getElementById('sim-goreum-f').setAttribute('fill', color);
+                }
+            } else {
+                if (part === 'top') {
+                    document.getElementById('sim-jeogori-m').setAttribute('fill', color);
+                } else if (part === 'bottom') {
+                    document.getElementById('sim-baji').setAttribute('fill', color);
+                } else if (part === 'point') {
+                    // 남성 배자 또는 포인트 컬러 반영
+                }
+            }
+        }
+    </script>
+</body>
+</html>
